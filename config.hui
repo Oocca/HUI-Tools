@@ -1,8 +1,8 @@
 {
-  "pt_sends_to": "HUI In 3",
-  "hui_out_port": "UM-ONE 3",
-  "hui_in_port": "UM-ONE 2",
-  "pt_recv_from": "HUI Out 5",
+  "pt_sends_to": "",
+  "hui_out_port": "",
+  "hui_in_port": "",
+  "pt_recv_from": "",
   "fg_color": "#00eed5",
   "bg_color": "#06100e",
   "dim_color": "#005549",
