@@ -1,0 +1,217 @@
+╔═══════════════════════════════════════════════════════╗
+║          HUI Virtual Display — Setup Guide            ║
+║                         v3.0                          ║
+╚═══════════════════════════════════════════════════════╝
+
+You'll complete this setup once. After that, running
+the display is just a double-click.
+
+────────────────────────────────────────────────────────
+STEP 1 — Install Python
+────────────────────────────────────────────────────────
+
+1. Go to:  https://www.python.org/downloads/
+2. Click the big yellow "Download Python" button.
+3. Run the installer.
+4. *** IMPORTANT: On the first screen, tick the box
+   that says "Add Python to PATH" before clicking
+   Install Now. ***
+5. Click "Install Now" and let it finish.
+
+
+────────────────────────────────────────────────────────
+STEP 2 — Install loopMIDI (virtual MIDI cable)
+────────────────────────────────────────────────────────
+
+loopMIDI creates "virtual" MIDI ports so Pro Tools
+can talk to this program.
+
+1. Go to:  https://www.tobias-erichsen.de/software/loopmidi.html
+2. Download and install loopMIDI (it's free).
+3. Launch loopMIDI (it will appear in your system tray).
+4. In the text box at the bottom, type:  HUI In
+5. Click the + button to create the port.
+6. Repeat: type  HUI Out  and click + again.
+7. You should now see both ports listed.
+
+   Leave loopMIDI running whenever you use this program.
+   You can set it to start with Windows automatically
+   in its own settings menu.
+
+
+────────────────────────────────────────────────────────
+STEP 3 — Install Python libraries
+────────────────────────────────────────────────────────
+
+First, try the quick method:
+
+1. Press the Windows key, type  cmd  and press Enter
+   to open Command Prompt.
+
+2. Run this line first to make sure your installer
+   is up to date:
+
+      python -m pip install --upgrade pip
+
+3. Then run:
+
+      pip install mido python-rtmidi
+
+4. Wait for it to finish. You may see a warning about
+   "scripts not on PATH" — this is harmless and can
+   be ignored.
+
+If step 3 fails with a compiler error:
+─────────────────────────────────────
+   python-rtmidi needs a C++ compiler to build on
+   Windows. If you see an error mentioning "Unknown
+   compiler" or "Visual Studio", do the following:
+
+   a. Go to:
+      https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
+   b. Click "Download Build Tools" and run the installer.
+
+   c. When asked what to install, tick:
+         "Desktop development with C++"
+      then click Install (the download is about 1-2 GB).
+
+   d. Restart your computer when it finishes.
+
+   e. Open Command Prompt again and re-run:
+         pip install mido python-rtmidi
+
+
+────────────────────────────────────────────────────────
+STEP 4 — Find your HUI hardware port names
+────────────────────────────────────────────────────────
+
+1. Make sure your HUI is plugged in and turned on.
+
+2. Double-click  list_midi_ports.py
+   (or in Command Prompt: python list_midi_ports.py)
+
+3. Look for your HUI hardware in the list.
+   It might be called something like:
+     • "UM-ONE"
+     • "USB MIDI Interface"
+     • "Mackie HUI"
+     • "MIDISPORT 1x1" (or similar USB-MIDI adaptor)
+
+   Note: On Windows, a number is appended to each port
+   name (e.g. "UM-ONE 2"). Write down the full name
+   including the number.
+
+4. Also note the full names of your loopMIDI ports
+   (e.g. "HUI In 3" and "HUI Out 5").
+
+
+────────────────────────────────────────────────────────
+STEP 5 — Run the program and configure it
+────────────────────────────────────────────────────────
+
+From v3.0 onwards, you no longer need to edit the
+Python file manually. Port names and appearance are
+set from inside the program.
+
+1. Make sure loopMIDI is running (Step 2).
+2. Make sure your HUI hardware is on.
+3. Double-click  hui_display.py  to launch the program.
+   (On first run it will create a  config.hui  file
+   in the same folder — this stores your settings.)
+4. Click  Menu > Configure  in the menu bar.
+5. In the  MIDI Ports  tab, set the four ports:
+
+     Pro Tools → Script:      HUI In   (+ its number)
+     Script → HUI hardware:   UM-ONE   (+ its number, output list)
+     HUI hardware → Script:   UM-ONE   (+ its number, input list)
+     Script → Pro Tools:      HUI Out  (+ its number)
+
+   Use the "Refresh port list" button if your device
+   does not appear in the drop-down.
+
+6. Click  Apply & Reconnect.
+7. The status bar at the bottom of the display window
+   should show "Connected".
+
+You can also use the  Appearance  tab in Configure to
+change the display text colour, background colour,
+and font size to your preference.
+
+
+────────────────────────────────────────────────────────
+STEP 6 — Configure Pro Tools
+────────────────────────────────────────────────────────
+
+Tell Pro Tools to route HUI traffic through the
+virtual loopMIDI ports instead of direct to hardware.
+
+1. In Pro Tools, go to:
+   Setup > Peripherals > MIDI Controllers tab.
+
+2. Find your HUI entry (Type = HUI).
+
+3. Set the ports as follows:
+     Send To:       HUI In    ← the loopMIDI port
+     Receive From:  HUI Out   ← the loopMIDI port
+
+   IMPORTANT: "Send To" and "Receive From" here are
+   from Pro Tools' point of view, which is the opposite
+   of what the port names suggest. "HUI In" receives
+   data from Pro Tools; "HUI Out" sends data back to
+   Pro Tools. This is intentional.
+
+4. Click OK.
+
+5. Load a session — the main display should populate
+   immediately.
+
+
+────────────────────────────────────────────────────────
+DAILY USE
+────────────────────────────────────────────────────────
+
+Each time you want to use the display:
+
+1. Start loopMIDI (or set it to launch with Windows).
+2. Turn on your HUI hardware.
+3. Double-click  hui_display.py.
+4. Open Pro Tools as normal.
+
+The display window can be dragged anywhere on your
+screen and stays on top of other windows. Your settings
+are remembered between sessions in config.hui.
+
+To change any setting later: Menu > Configure.
+To exit:                      Menu > Exit.
+
+
+────────────────────────────────────────────────────────
+TROUBLESHOOTING
+────────────────────────────────────────────────────────
+
+"MIDI ERROR" in the status bar:
+  • Open Menu > Configure > MIDI Ports.
+  • Click "Refresh port list" and re-select your ports.
+  • Make sure loopMIDI is running.
+  • Make sure no other program (e.g. a DAW) has the
+    same ports open exclusively.
+
+Display shows blank text:
+  • Make sure Pro Tools is connected and a session
+    is open. The display only updates when Pro Tools
+    is actively sending data to the HUI.
+
+Port numbers changed after reconnecting devices:
+  • On Windows, port numbers can change if you plug/
+    unplug USB devices. Just re-open Menu > Configure,
+    click Refresh, and re-select the correct ports.
+
+The config.hui file:
+  • This is a plain text file in JSON format, located
+    in the same folder as hui_display.py.
+  • It is created automatically on first run.
+  • You can edit it in Notepad if needed, but it is
+    easier to use Menu > Configure.
+
+────────────────────────────────────────────────────────
